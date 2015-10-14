@@ -1,36 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 const (
 	coin = iota
 	push = iota
 )
 
-type State interface {
-	Handle() State
+type TurnstileState interface {
+	Handle() (TurnstileState, error)
 }
 
 type TurnstileContext struct {
-	action int
+	action       int
+	currentState TurnstileState
 }
 
-type TurnstileState struct {
+type UnlockedState struct {
 	context TurnstileContext
 }
 
-type TurnstileStatemachine struct {
-	state TurnstileState
+type LockedState struct {
+	context TurnstileContext
 }
 
-func (ts *TurnstileState) Handle() {
-	switch ts.context.action {
+func (us *UnlockedState) Handle() (TurnstileState, error) {
+	return handle(us.context)
+}
+
+func (ls *LockedState) Handle() (TurnstileState, error) {
+	return handle(ls.context)
+}
+
+func handle(context TurnstileContext) (TurnstileState, error) {
+	switch context.action {
 	case coin:
-		fmt.Println("coin")
+		return &UnlockedState{context}, nil
 	case push:
-		fmt.Println("push")
+		return &LockedState{context}, nil
 	default:
-		fmt.Println("this is unexpected")
+		return nil, errors.New("unexpected action")
 	}
 }
 
