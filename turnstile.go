@@ -5,9 +5,11 @@ import (
 	"fmt"
 )
 
+type Action int
+
 const (
-	coin = iota
-	push = iota
+	coin Action = iota
+	push Action = iota
 )
 
 type TurnstileState interface {
@@ -15,7 +17,7 @@ type TurnstileState interface {
 }
 
 type TurnstileContext struct {
-	action       int
+	action       Action
 	currentState TurnstileState
 }
 
