@@ -33,8 +33,16 @@ func (us *UnlockedState) Handle() (TurnstileState, error) {
 	return handle(us.context)
 }
 
+func (us *UnlockedState) String() string {
+	return "UnlockedState"
+}
+
 func (ls *LockedState) Handle() (TurnstileState, error) {
 	return handle(ls.context)
+}
+
+func (ls *LockedState) String() string {
+	return "LockedState"
 }
 
 func handle(context TurnstileContext) (TurnstileState, error) {
@@ -48,6 +56,10 @@ func handle(context TurnstileContext) (TurnstileState, error) {
 	}
 }
 
+func (tc *TurnstileContext) setAction(action Action) {
+	tc.action = action
+}
+
 func main() {
-	fmt.Printf("Turnstile\n")
+	context := &TurnstileContext{}
 }
